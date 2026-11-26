@@ -1,0 +1,11 @@
+[ "$1" = committed ] && [ "${HUSKY_SKIP_TRACK:-}" != 1 ] || exit 0
+[ -n "${TDDLAB_API_URL:-$(git config --local --get tddlab.apiUrl)}" ] || exit 0
+
+while read -r previous next ref; do
+  case "$previous:$ref" in
+    0000000000000000000000000000000000000000:refs/heads/*)
+      [ "$next" != "$previous" ] || continue
+      node ./script/branchSupport.js branch "${ref#refs/heads/}" "$next" || true
+      ;;
+  esac
+done

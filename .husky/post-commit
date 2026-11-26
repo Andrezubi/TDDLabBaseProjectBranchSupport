@@ -2,6 +2,11 @@ if [ "$HUSKY_SKIP_TRACK" = "1" ]; then
 	exit 0
 fi
 
+if [ -n "${TDDLAB_API_URL:-$(git config --local --get tddlab.apiUrl)}" ]; then
+	node ./script/branchSupport.js commit || true
+	exit 0
+fi
+
 node ./script/commitScript.js
 
 REPO_DIR="$(git rev-parse --show-toplevel)"
